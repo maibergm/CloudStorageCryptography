@@ -1,0 +1,118 @@
+Application Description
+The database that I have designed and implemented is the database of a private bus company. In this database there are the buses, the customers, the employees and the depot where the buses are stored. Information about these alongside the routes that are available for the buses to take and the price it will cost for the customer to travel on that route is stored in the database.
+An important aspect of the database is to keep track of customer details and their journeys. It’s important because if it’s not done right then problems such as the bus chosen to take the certain route didn’t have enough seating.
+It’s also important to store information on the employee’s and their next tasks. To make sure everything is flowing smoothly, information in the buses table contains information on the next route that the bus will take and the next driver that will be driving the bus. This makes it easy to know who is going where and keeps a smooth workflow. 
+The other tables were made once again to make sure everything is run smoothly. The fare table makes it easy to send a customer a price for where they want to go as every possible route that the company does is in the table. The route table is there so when needed a list of all the journeys that the company does can be show straight away to a customer. The depot table is used to make sure every driver knows where they have to pick up and drop off their buses every morning and evening . 
+
+
+
+
+
+
+
+
+
+Entity Relationship Diagram 
+
+
+
+
+
+
+
+Relational Schema
+ 
+
+
+
+
+
+
+
+
+
+
+Functional Dependency Diagram
+ 
+
+
+
+
+
+Appendix 
+CREATE
+CREATE TABLE Buses ( reg VARCHAR(15) NOT NULL, make VARCHAR (15) NOT NULL, model VARCHAR (15) NOT NULL, seating INTEGER NOT NULL, depot_id INTEGER NOT NULL, next_route VARCHAR(15) NOT NULL, next_driver INTEGER NOT NULL, PRIMARY KEY (reg));
+CREATE TABLE Routes (route_id VARCHAR (15) NOT NULL, departure_location VARCHAR (36) NOT NULL, departure_time TIME NOT NULL, arrival_location VARCHAR (36) NOT NULL, arrival_time TIME NOT NULL, PRIMARY KEY (route_id));
+CREATE TABLE Fare (seat_class VARCHAR (20) NOT NULL, ticket_type VARCHAR (15) NOT NULL, route VARCHAR (15) NOT NULL, fare INTEGER NOT NULL, PRIMARY KEY (fare));
+CREATE TABLE Employee (employee_id INTEGER NOT NULL, name VARCHAR (20) NOT NULL, surname VARCHAR (20) NOT NULL, position VARCHAR (20) NOT NULL, salary INTEGER NOT NULL, hire_date DATE NOT NULL, PRIMARY KEY (employee_id));
+CREATE TABLE Customer (customer_id INTEGER NOT NULL, name VARCHAR (20) NOT NULL, surname VARCHAR (20) NOT NULL, journey VARCHAR (15) NOT NULL, PRIMARY KEY (customer_id));
+CREATE TABLE Depot (depot_id INTEGER NOT NULL, capacity INTEGER NOT NULL, opening_time TIME NOT NULL, closing_time TIME NOT NULL, manager_in_charge INTEGER NOT NULL, PRIMARY KEY (depot_id));
+
+ALTER
+ALTER TABLE Buses ADD FOREIGN KEY(depot_id) REFERENCES Depot(depot_id);
+ALTER TABLE Fare ADD FOREIGN KEY (route) REFERENCES Routes(routeID);
+ALTER TABLE Buses ADD FOREIGN KEY (next_route) REFERENCES Routes(route_id);
+ALTER TABLE Buses ADD FOREIGN KEY (next_driver) REFERENCES Employee(employee_id);
+ALTER TABLE Customer ADD FOREIGN KEY (journey) REFERENCES Routes(route_id);
+ALTER TABLE Depot ADD FOREIGN KEY (manager_in_charge) REFERENCES Employee(employee_id);
+
+
+
+
+
+
+INSERT
+INSERT INTO Buses Values (99D3462, 'Volvo', 'B7R', 86, 2, 25, 92);
+INSERT INTO Buses Values (05D58213, 'Ayats', 'Bravo', 112, 2, 5, 89);
+INSERT INTO Buses Values (09D67, 'Autosan', 'Eurolider', 12, 1, 3, 11, 92);
+INSERT INTO Buses Values (04D94321, 'MAN', 'Fortuna', 82, 5, 28, 22);
+INSERT INTO Buses Values (06D8984, 'Scania', 'L94', 102, 4, 9, 87);
+INSERT INTO Buses Values (02D321, 'MAN', 'Lion',89, 5, 2, 57);
+INSERT INTO Buses Values (14D328411, 'Scania', 'Touring', 133, 3, 32, 11);
+
+INSERT INTO Depot Values (2, 22, 5:30, 22:00, 3);
+INSERT INTO Depot Values (1, 50, 4:00, 00:30, 62);
+INSERT INTO Depot Values (3, 15, 8:00, 20:00, 45);
+INSERT INTO Depot Values (4, 30, 5:30, 22:00, 92);
+INSERT INTO Depot Values (5, 35, 6:30, 23:00, 33);
+
+INSERT INTO Routes Values(25, 'Dublin', 8:00, 'Galway', 11:30);
+INSERT INTO Routes Values(5,  'Galway', 12:45, 'Dublin', 16:15);
+INSERT INTO Routes Values(32, 'Dublin', 6:00, 'Cork', 10:10);
+INSERT INTO Routes Values(11, 'Dublin', 13:00, 'Belfast', 15:30);
+INSERT INTO Routes Values(2,  'Dublin', 7:00, 'Carlow', 9:30);
+INSERT INTO Routes Values(9,  'Waterford', 9:00, 'Dublin', 11:40);
+INSERT INTO Routes Values(21, 'Cork', 11:00, 'Galway', 14:20);
+INSERT INTO Routes Values(15, 'Belfast', 8:00, 'Dublin', 10:30);
+INSERT INTO Routes Values(28, 'Limerick', 12:00, 'Galway', 13:50);
+
+INSERT INTO Fare Values('Standard', 'Adult', 25, 15);
+INSERT INTO Fare Values('Standard', 'Student', 25, 12);
+INSERT INTO Fare Values('Standard Premier', 'Adult', 32, 20);
+INSERT INTO Fare Values('Business Premier', 'Adult', 11, 30);
+INSERT INTO Fare Values('Business Premier', 'Adult', 2, 28);
+INSERT INTO Fare Values('Standard', 'Student', 32, 14);
+INSERT INTO Fare Values('Standard Premier', 'Adult', 28, 18);
+INSERT INTO Fare Values('Standard', 'Adult', 9, 13);
+INSERT INTO Fare Values('Standard Premier', 'Adult', 2, 19);
+
+INSERT INTO Employee Values (11, 'Sean', 'Smith', 'Driver', 30000, 30/2/2014);
+INSERT INTO Employee Values (3, 'Derrick', 'Murphy', 'Manager', 50000, 19/2/2005);
+INSERT INTO Employee Values (57, 'Roger', 'Moore', 'Driver', 38000, 1/5/2009);
+INSERT INTO Employee Values (62, 'Steven', 'ODonnell', 'Manager', 45000, 2/6/2006);
+INSERT INTO Employee Values (58, 'James', 'Clark', 'Driver', 36000, 11/11/2010);
+INSERT INTO Employee Values (45, 'Oisin', 'Burke', 'Manager', 42000, 28/12/2007);
+INSERT INTO Employee Values (22, 'Aoife', 'Keating', 'Driver', 38000, 3/8/2009);
+INSERT INTO Employee Values (87, 'Gerard', 'Moran', 'Driver', 31000, 27/1/2012);
+INSERT INTO Employee Values (92, 'Ciaran', 'Molloy', 'Manager', 55000, 4/4/2003);
+INSERT INTO Employee Values (89, 'Conor', 'Harrison', 'Driver', 30000, 15/4/2014);
+INSERT INTO Employee Values (33, 'Daniel', 'Fitzgerald', 'Manager', 53000, 21/10/2004);
+
+INSERT INTO Customer Values(42131, 'Jason', 'Farrell', 25);
+INSERT INTO Customer Values(23419, 'John', 'Burke', 2);
+INSERT INTO Customer Values(53242, 'Graham', 'Doyle', 9);
+INSERT INTO Customer Values(32412, 'Josh', 'Timmons', 9);
+INSERT INTO Customer Values(56234, 'Laura', 'Byrne', 11);
+INSERT INTO Customer Values(13242, 'Mark', 'Leonard', 28);
+INSERT INTO Customer Values(75243, 'Michael', 'Kelly', 5);
+INSERT INTO Customer Values(45213, 'Rebekah', 'Dorman', 5);
