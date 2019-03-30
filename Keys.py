@@ -3,8 +3,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
-from Crypto.Cipher import AES
-import pyAesCrypt
+
 
 def store_privKey(private_key):
     pem = private_key.private_bytes(
