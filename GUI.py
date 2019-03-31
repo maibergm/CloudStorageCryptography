@@ -15,16 +15,16 @@ PORT = 8080
 def index():
     return render_template('index.html')
 
-@server.route("/createGroup", methods =['POST'])
-def createAGroup():
+@server.route("/userCreate", methods =['POST'])
+def createAUser():
 
     N = 6
     groupCode = ''.join(random.choices(string.ascii_uppercase + string.digits, k=N))
     private_key = Keys.genRSAKey()
     Keys.store_privKey(private_key)
     public_key = private_key.public_key()
-
-    return render_template('createGroup.html', groupCode = groupCode, public_key = public_key)
+    Keys.store_pubKey(public_key)
+    return render_template('userCreate.html', groupCode = groupCode, public_key = public_key)
 
 if __name__ == "__main__":
     server.run(port=PORT)

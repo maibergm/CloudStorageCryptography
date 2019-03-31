@@ -11,7 +11,7 @@ def store_privKey(private_key):
         format=serialization.PrivateFormat.PKCS8,
         encryption_algorithm=serialization.NoEncryption()
     )
-    with open('private_key.pem', 'wb') as f:
+    with open('private_key.pem', 'wb+') as f:
         f.write(pem)
 
 def store_pubKey(public_key):
@@ -19,7 +19,7 @@ def store_pubKey(public_key):
     encoding=serialization.Encoding.PEM,
     format=serialization.PublicFormat.SubjectPublicKeyInfo
 )
-    with open('public_key.pem', 'wb') as f:
+    with open('public_key.pem', 'ba+') as f:
         f.write(pem)
 
 def genRSAKey():

@@ -6,9 +6,13 @@
 <body>
 <h2>Secure Cloud Storage Groups</h2>
 
-<form action="/createGroup" method ="post">
-  <br><br>
-  <input type="submit" value="Create a Group">
+Username:
+<input type="text" name="username" ><br><br>
+<form action="/userCreate" method ="post">
+  <input type="submit" value="Create a Group"><br>
+</form>
+<form action="/userCreate" method ="post">
+  <br><input type="text" name="roomID" >  <input type="submit" value="Join group">
 </form>
 </body>
 </html>
