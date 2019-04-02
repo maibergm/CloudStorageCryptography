@@ -4,10 +4,16 @@
 </head>
 
 <body>
-<h2></h2>
-<!--<h2>Invite link: {{ groupCode }}</h2>-->
-Username:<br>
-<input type="text" name="firstname" value=><br>
+<h2>Room Id: {{ groupCode }}</h2>
 
+<form action="/addUser" method ="post">
+  <input type="submit" value="Add a user"><br><br>
+</form>
+<form action="/removeUser" method ="post">
+  <input type="submit" value="Remove a user"><br><br>
+</form>
+<form action="/addUser" method ="post">
+  <input type="submit" value="Upload"><br><br>
+</form>
 </body>
 </html>

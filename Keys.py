@@ -14,13 +14,15 @@ def store_privKey(private_key):
     with open('private_key.pem', 'wb+') as f:
         f.write(pem)
 
-def store_pubKey(public_key):
+def store_pubKey(public_key, username):
     pem = public_key.public_bytes(
     encoding=serialization.Encoding.PEM,
     format=serialization.PublicFormat.SubjectPublicKeyInfo
 )
+    username = username.encode()
+    frame = bytes([username, pem])
     with open('public_key.pem', 'ba+') as f:
-        f.write(pem)
+        f.write(frame)
 
 def genRSAKey():
     private_key = rsa.generate_private_key(
