@@ -14,16 +14,28 @@ def store_privKey(private_key):
     with open('private_key.pem', 'wb+') as f:
         f.write(pem)
 
-def store_pubKey(public_key, username):
+def store_pubKey(public_key):
     pem = public_key.public_bytes(
     encoding=serialization.Encoding.PEM,
     format=serialization.PublicFormat.SubjectPublicKeyInfo
 )
-    username = username.encode()
-    frame = bytes([username, pem])
-    with open('public_key.pem', 'ba+') as f:
-        f.write(frame)
+    pem1 = pem.decode()
+    pkIdentifier = ''
+    for x in range(400, 425):
+        pkIdentifier += pem1[x]
 
+    with open('public_key.pem', 'ba+') as f:
+        f.write(pem)
+    return pkIdentifier
+
+#def readKey(file):
+#    with open(file, "rb") as key_file:
+#        public_key = serialization.load_pem_public_key(
+#            key_file.read(),
+#            backend=default_backend()
+#        )
+#        pKey = public_key.decode()
+#        return pKey
 def genRSAKey():
     private_key = rsa.generate_private_key(
         public_exponent = 65537,

@@ -18,13 +18,18 @@ def index():
 
 @server.route("/userCreate", methods =['POST'])
 def createAUser():
-    username = request.form.get('username')
+    groups = dict()
     N = 6
+    username = request.form.get('username')
     groupCode = ''.join(random.choices(string.ascii_uppercase + string.digits, k=N))
     private_key = Keys.genRSAKey()
     Keys.store_privKey(private_key)
     public_key = private_key.public_key()
-    Keys.store_pubKey(public_key, username)
+    identifier = Keys.store_pubKey(public_key)
+    server = {username:identifier}
+    groups[groupCode] = [username]
+#    pKey = Keys.readKey("public_key.pem")
+#    print(pKey)
     return render_template('userCreate.html', groupCode = groupCode, username = username)
 
 if __name__ == "__main__":
