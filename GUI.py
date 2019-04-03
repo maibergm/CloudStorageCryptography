@@ -17,10 +17,8 @@ PORT = 8080
 myclient = pymongo.MongoClient("mongodb+srv://maxmai96:hello123@encryptionserver-2tccp.gcp.mongodb.net/test?retryWrites=true")
 
 mydb = myclient["server"]
-mycol = mydb["users"]
-
-myList = {'sAdfS7':['Max', 'Dima', 'George']}
-x = mycol.insert_one(myList)
+usersDB = mydb["users"]
+groupsDB = mydb["groups"]
 
 @server.route("/")
 def index():
@@ -38,6 +36,10 @@ def createAUser():
     pKey = Keys.store_pubKey(public_key) #Store the public key and get an identifier for it
     users = [username, 'Dima', 'Dan']
     usersDump = json.dumps(users)
+    myList = {groupCode:[username]}
+    for x in usersDB.find():
+        print(x)
+
 #    server = {username:identifier} # match the user with the private key
 #    groups[groupCode] = [username] # Create a group code room and put the creator in it
     conn = sqlite3.connect('server.sqlite')
