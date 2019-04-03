@@ -20,13 +20,14 @@ def store_pubKey(public_key):
     format=serialization.PublicFormat.SubjectPublicKeyInfo
 )
     pem1 = pem.decode()
-    server = [pem1]
-    with open("public_keys.txt","w+") as f: #in write mode
-        f.write("{}".format(server))
-    pkIdentifier = ''
-    for x in range(400, 425):
-        pkIdentifier += pem1[x]
-    return pkIdentifier
+    return pem1
+#    server = [pem1]
+#    with open("public_keys.txt","w+") as f: #in write mode
+#        f.write("{}".format(server))
+#    pkIdentifier = ''
+#    for x in range(400, 425):
+#        pkIdentifier += pem1[x]
+#    return pkIdentifier
 
 def readKey():
     with open("public_keys.txt") as f: #in read mode, not in write mode, careful
