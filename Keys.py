@@ -20,22 +20,26 @@ def store_pubKey(public_key):
     format=serialization.PublicFormat.SubjectPublicKeyInfo
 )
     pem1 = pem.decode()
+    server = [pem1]
+    with open("public_keys.txt","w+") as f: #in write mode
+        f.write("{}".format(server))
     pkIdentifier = ''
     for x in range(400, 425):
         pkIdentifier += pem1[x]
-
-    with open('public_key.pem', 'ba+') as f:
-        f.write(pem)
     return pkIdentifier
 
-#def readKey(file):
-#    with open(file, "rb") as key_file:
-#        public_key = serialization.load_pem_public_key(
-#            key_file.read(),
-#            backend=default_backend()
-#        )
-#        pKey = public_key.decode()
-#        return pKey
+def readKey():
+    with open("public_keys.txt") as f: #in read mode, not in write mode, careful
+        rd=f.readlines()
+    return rd
+
+def keyToBytes(public_key):
+    pem = public_key.public_bytes(
+    encoding=serialization.Encoding.PEM,
+    format=serialization.PublicFormat.SubjectPublicKeyInfo
+)
+    return pem
+
 def genRSAKey():
     private_key = rsa.generate_private_key(
         public_exponent = 65537,
@@ -66,3 +70,17 @@ def decryptRSA(encryptedAESKey, private_key):
         )
     )
     return original_message
+
+def findKey(file, identifier):
+    y = 0
+    count = len(file)
+    start = 400
+    pkLength = 434
+    while (y != count):
+        pKey = file[y]
+        toCompare = ''
+        for x in range (start, pkLength):
+            toCompare += pKey[x]
+        y = y + 1
+        start = start + 464
+        pkLength = pkLength + 464
