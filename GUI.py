@@ -14,12 +14,6 @@ import pymongo
 
 server = Flask(__name__)
 PORT = 8080
-myclient = pymongo.MongoClient("mongodb+srv://maxmai96:hello123@encryptionserver-2tccp.gcp.mongodb.net/test?retryWrites=true")
-
-mydb = myclient["server"]
-usersDB = mydb["users"]
-groupsDB = mydb["groups"]
-
 @server.route("/")
 def index():
     return render_template('index.html')
@@ -33,33 +27,27 @@ def createAUser():
     private_key = Keys.genRSAKey() # Generate a private key
     Keys.store_privKey(private_key) # Store the private key locally
     public_key = private_key.public_key() # Create a public key
-    pKey = Keys.store_pubKey(public_key) #Store the public key and get an identifier for it
-    users = [username, 'Dima', 'Dan']
-    usersDump = json.dumps(users)
-    myList = {groupCode:[username]}
-    for x in usersDB.find():
-        print(x)
-
-#    server = {username:identifier} # match the user with the private key
-#    groups[groupCode] = [username] # Create a group code room and put the creator in it
-    conn = sqlite3.connect('server.sqlite')
-    cur = conn.cursor()
-    cur.execute('INSERT INTO users (username, public_key) VALUES (?, ?)',
-          (username, pKey))
-    cur.execute('INSERT INTO groups (groupCode, users) VALUES (?, ?)',
-          (groupCode, usersDump))
-    conn.commit()
-    conn.close()
+    pKey = Keys.store_pubKey(public_key) #Get the public key
+    groups = {groupCode:[username]}
+    users = {username:pKey}
+    with open("groups.json", "a+") as write_file:
+        json.dump(groups, write_file)
+    with open("users.json", "w+") as write_file:
+        json.dump(users, write_file)
     return render_template('creator.html', groupCode = groupCode, username = username)
 
 @server.route("/member", methods =['POST'])
 def joinAGroup():
     roomID = request.form.get('roomID')
-    conn = sqlite3.connect('server.sqlite')
-    curr = conn.cursor()
-    curr.execute('SELECT users FROM groups WHERE groupCode = "%s"' % (roomID))
-    data = curr.fetchall()
-    conn.close()
+    username = request.form.get('username')
+    with open("groups.json") as read_file:
+      groupLoad = json.loads(read_file)
+
+    private_key = Keys.genRSAKey()
+    Keys.store_privKey(private_key)
+    public_key = private_key.public_key()
+    pKey = Keys.store_pubKey(public_key)
+    users = {username:pKey}
 
     return render_template('member.html')
 if __name__ == "__main__":
