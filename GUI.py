@@ -29,25 +29,41 @@ def createAUser():
     public_key = private_key.public_key() # Create a public key
     pKey = Keys.store_pubKey(public_key) #Get the public key
     groups = {groupCode:[username]}
-    users = {username:pKey}
-    with open("groups.json", "a+") as write_file:
-        json.dump(groups, write_file)
-    with open("users.json", "w+") as write_file:
-        json.dump(users, write_file)
+    users = {username: pKey}
+    with open("users.json", "r") as read_file:
+        usersFile = json.load(read_file)
+        usersFile[username] = pKey
+    with open("users.json", "w") as write_file:
+        json.dump(usersFile, write_file)
+    with open("groups.json", "r") as read_file:
+        groupsFile = json.load(read_file)
+        groupsFile[groupCode] = [username]
+    with open("groups.json", "w") as write_file:
+        json.dump(groupsFile, write_file)
+
+
+#    with open("users.json", "w+") as write_file:
+#        json.dump(users, write_file)
     return render_template('creator.html', groupCode = groupCode, username = username)
 
 @server.route("/member", methods =['POST'])
 def joinAGroup():
     roomID = request.form.get('roomID')
     username = request.form.get('username')
-    with open("groups.json") as read_file:
-      groupLoad = json.loads(read_file)
-
     private_key = Keys.genRSAKey()
     Keys.store_privKey(private_key)
     public_key = private_key.public_key()
     pKey = Keys.store_pubKey(public_key)
-    users = {username:pKey}
+    with open("groups.json") as read_file:
+      groupsFile = json.load(read_file)
+      groupsFile[roomID].append(username)
+    with open("groups.json", "w") as write_file:
+        json.dump(groupsFile, write_file)
+    with open("users.json", "r") as read_file:
+        usersFile = json.load(read_file)
+        usersFile[username] = pKey
+    with open("users.json", "w") as write_file:
+        json.dump(usersFile, write_file)
 
     return render_template('member.html')
 if __name__ == "__main__":
