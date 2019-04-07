@@ -8,16 +8,21 @@ import os
 import random
 import string
 import Keys
+import webbrowser
 import json
 import sqlite3
 import pymongo
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
+import quickstart
+import tkinter as tk
+from tkinter import filedialog
 
 server = Flask(__name__)
 PORT = 8080
 @server.route("/")
 def index():
     return render_template('index.html')
-
 @server.route("/creator", methods =['POST'])
 def createAUser():
     groups = dict()
@@ -40,10 +45,6 @@ def createAUser():
         groupsFile[groupCode] = [username]
     with open("groups.json", "w") as write_file:
         json.dump(groupsFile, write_file)
-
-
-#    with open("users.json", "w+") as write_file:
-#        json.dump(users, write_file)
     return render_template('creator.html', groupCode = groupCode, username = username)
 
 @server.route("/member", methods =['POST'])
@@ -64,7 +65,13 @@ def joinAGroup():
         usersFile[username] = pKey
     with open("users.json", "w") as write_file:
         json.dump(usersFile, write_file)
+@server.route("/upload", methods =["POST"])
+def upload():
+    root = tk.Tk()
+    root.withdraw()
+    file_path = filedialog.askopenfilename()
+    webbrowser.open('https://drive.google.com/drive/u/0/my-drive')
+    return render_template('creator.html')
 
-    return render_template('member.html')
 if __name__ == "__main__":
     server.run(port=PORT)
